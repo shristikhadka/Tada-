@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database Container
+  postgres:
+    image: postgres:16-alpine
+    container_name: todo-postgres
+    environment:
+      POSTGRES_DB: tododb
+      POSTGRES_USER: todouser
+      POSTGRES_PASSWORD: todopass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - todo-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U todouser -d tododb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot Application Container
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: todo-app
+    ports:
+      - "8080:8080"
+    environment:
+      # Currently using H2 - Spring Boot auto-configures it
+      # When ready to switch to Postgres, uncomment these lines:
+      # SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/tododb
+      # SPRING_DATASOURCE_USERNAME: todouser
+      # SPRING_DATASOURCE_PASSWORD: todopass
+      # SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      # SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_PROFILES_ACTIVE: dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - todo-network
+    restart: unless-stopped
+
+  # React Frontend Container (uncomment when your React app is ready)
+  # frontend:
+  #   build:
+  #     context: ../your-react-repo-folder-name
+  #     dockerfile: Dockerfile
+  #   container_name: todo-frontend
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - REACT_APP_API_URL=http://localhost:8080
+  #   depends_on:
+  #     - app
+  #   networks:
+  #     - todo-network
+  #   restart: unless-stopped
+
+# Network to allow containers to communicate
+networks:
+  todo-network:
+    driver: bridge
+
+# Persistent storage for Postgres data
+volumes:
+  postgres-data:

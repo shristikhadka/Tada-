@@ -22,7 +22,7 @@ public class User
     private  String userName;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private @NonNull String password;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
