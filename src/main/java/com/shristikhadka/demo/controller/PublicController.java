@@ -3,7 +3,6 @@ package com.shristikhadka.demo.controller;
 import com.shristikhadka.demo.entity.User;
 import com.shristikhadka.demo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -21,7 +21,8 @@ public class User
     @Column(unique = true, nullable = false)
     private  String userName;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private @NonNull String password;
+    private @NonNull String password; 
+    
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
 

@@ -1,0 +1,27 @@
+# Backend Environment Variables
+# Copy this file to .env and update with your actual values
+
+# Database Configuration
+DATABASE_URL=jdbc:h2:file:./data/tada-db;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE
+DATABASE_USERNAME=sa
+DATABASE_PASSWORD=
+
+# Server Configuration
+SERVER_PORT=8080
+
+# CORS Configuration (Frontend URL)
+FRONTEND_URL=http://localhost:5173
+
+# H2 Console (set to false in production)
+H2_CONSOLE_ENABLED=true
+
+# JPA Show SQL (set to false in production)
+JPA_SHOW_SQL=true
+
+# Example for production:
+# DATABASE_URL=jdbc:postgresql://localhost:5432/tada
+# DATABASE_USERNAME=admin
+# DATABASE_PASSWORD=secure_password
+# FRONTEND_URL=https://tada.example.com
+# H2_CONSOLE_ENABLED=false
+# JPA_SHOW_SQL=false
