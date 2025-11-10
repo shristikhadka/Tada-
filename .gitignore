@@ -38,3 +38,13 @@ build/
 
 ### Private Documentation ###
 DEVELOPMENT_NOTES.md
+CI_CD_GUIDE.md
+ENDPOINT_USAGE_ANALYSIS.md
+ENDPOINTS_ANALYSIS.md
+CI_CD_EXPLANATION.md
+
+### Database Files ###
+data/
+*.mv.db
+*.trace.db
+*.lock.db

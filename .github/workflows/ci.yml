@@ -1,0 +1,78 @@
+# Backend CI/CD Workflow
+# This file tells GitHub Actions what to do when you push code
+
+name: Backend CI
+
+# STEP 1: WHEN TO RUN
+# This tells GitHub WHEN to run this workflow
+on:
+  # Run on every push to main branch
+  push:
+    branches: [ main ]
+  # Run on every pull request to main branch
+  pull_request:
+    branches: [ main ]
+  # Allow manual trigger (you can run it manually from GitHub)
+  workflow_dispatch:
+
+# STEP 2: WHAT TO RUN (JOBS)
+# Jobs are tasks that run in parallel or sequentially
+jobs:
+  # Job name: "test" - This job runs tests and builds the app
+  test:
+    # Run on Ubuntu Linux (latest version)
+    # GitHub provides free virtual machines (runners) to run your code
+    runs-on: ubuntu-latest
+
+    # STEP 3: STEPS TO EXECUTE
+    # Steps are commands that run in order
+    steps:
+      # Step 1: Checkout code from GitHub
+      # This downloads your code to the virtual machine
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Java 17
+      # This installs Java 17 on the virtual machine
+      # Your app needs Java 17 to run
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          # Java version to install
+          java-version: '17'
+          # Distribution: Use OpenJDK (free Java implementation)
+          distribution: 'temurin'
+          # Cache Maven dependencies (makes builds faster)
+          # Maven downloads libraries (dependencies) - caching saves them for next run
+          cache: 'maven'
+
+      # Step 3: Run tests
+      # This runs all your unit tests
+      # If tests fail, the workflow stops here
+      - name: Run tests
+        run: ./mvnw test
+        # ./mvnw is the Maven wrapper - it runs Maven without needing Maven installed
+        # test is the Maven command to run tests
+
+      # Step 4: Build application
+      # This compiles your code and creates a JAR file
+      # If build fails, the workflow stops here
+      - name: Build application
+        run: ./mvnw clean package -DskipTests
+        # clean: Remove old build files
+        # package: Compile and package into JAR
+        # -DskipTests: Skip tests (we already ran them in step 3)
+
+      # Step 5: Upload build artifacts (optional)
+      # This saves the JAR file so you can download it later
+      # Useful if you want to deploy or test the built file
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          # Name of the artifact
+          name: backend-jar
+          # What to upload (the JAR file)
+          path: target/*.jar
+          # How long to keep it (7 days)
+          retention-days: 7
+
