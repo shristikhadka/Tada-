@@ -3,6 +3,9 @@ package com.shristikhadka.demo.service;
 import com.shristikhadka.demo.entity.Todo;
 import com.shristikhadka.demo.entity.User;
 import com.shristikhadka.demo.repo.TodoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,12 +14,14 @@ import java.util.List;
 public class TodoService {
     private final TodoRepository todoRepository;
 
-    public TodoService(TodoRepository todoRepository) {
+    public TodoService(TodoRepository todoRepository)
+    {
         this.todoRepository = todoRepository;
     }
 
-    public List<Todo> getAllTodosForUser(User user) {
-        return user.getTodoList();
+    public Page<Todo> getAllTodosForUser(User user, int page, int size) {
+        Pageable pageable= PageRequest.of(page,size);
+        return todoRepository.findByUser(user,pageable);
     }
 
     public Todo createTodoForUser(Todo todo, User user) {

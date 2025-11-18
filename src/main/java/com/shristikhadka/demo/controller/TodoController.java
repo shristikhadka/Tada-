@@ -4,6 +4,7 @@ import com.shristikhadka.demo.entity.Todo;
 import com.shristikhadka.demo.entity.User;
 import com.shristikhadka.demo.service.TodoService;
 import com.shristikhadka.demo.service.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -22,9 +23,9 @@ public class TodoController
     }
 
     @GetMapping
-    public List<Todo> getAll(Principal principal){
+    public Page<Todo> getAll(Principal principal, @RequestParam(defaultValue="0")int page, @RequestParam(defaultValue ="20") int size){
         User currentUser = userService.getUserByUsername(principal.getName());
-        return todoService.getAllTodosForUser(currentUser);
+        return todoService.getAllTodosForUser(currentUser,page,size);
     }
 
     @PostMapping
